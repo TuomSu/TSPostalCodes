@@ -21,41 +21,39 @@ let params: string[] = process.argv;
 console.log('The contents of the `process.argv` array:');
 console.table(params);
 
-let rivi;
 let mycode = process.argv[2];
 
-
-function searchCode(mycode: string){
-    for (rivi of fileContents.split('\n')){
-        let listaus = rivi.split(',')
-        
-        type postikoodit = [string, string];
-        let koodilistaus : postikoodit = [listaus[0], listaus[1]]
-        let found: boolean;
-        for (let item of koodilistaus){
-            
-        if (item === mycode){
-            console.log(listaus[1])
-            found = true;
-            
-        }else{
-            found = false;
-        } 
-            
-        }
-        if(found = false){
-            console.log('Ei löytynyt annettua postikoodia');
-            }
-    }
-
-    
-
-return 
+interface PostOffice{
+    code: string;
+    city:string;
 }
 
-    
+function isNumbers(value: string){
+    return /^-?\d+$/.test(value);
+}
 
-searchCode(mycode);
+function searchMode(mycode: string) : PostOffice []{
+    return lines.map(line => {
+        let [code, city] = line.split(',');
+        return {code, city};
+    })}
+
+
+let findings = searchMode(mycode);
+
+if(isNumbers(mycode)){
+    let cityName = findings.find(item => item.code === mycode);
+    console.log(cityName?.city);
+}
+else{
+    let found = findings.filter(item => item.city.toLowerCase() === mycode.toLocaleLowerCase());
+    let codes: string [] = found.map(item => item.code);
+    codes.sort();
+    console.log(codes.join(','));
+}
+
+
+
 
 
 
